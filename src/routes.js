@@ -20,7 +20,7 @@ const routesConfig = [
       {
         path: '/explorer',
         exact: true,
-        component: lazy(() => import('views/Leaderboard')),
+        component: lazy(() => import('views/Explorer')),
       },
     ],
   },
