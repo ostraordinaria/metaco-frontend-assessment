@@ -2,11 +2,15 @@ const apiURL = process.env.REACT_APP_API_URL;
 
 async function client(
   endpoint,
-  { data, method = 'GET', ...customConfig } = {}
+  { data, method = 'GET', headers: customHeaders, ...customConfig } = {}
 ) {
   const config = {
     method,
     body: data ? JSON.stringify(data) : undefined,
+    headers: {
+      'Content-Type': data ? 'application/json' : undefined,
+      ...customHeaders,
+    },
     ...customConfig,
   };
 
