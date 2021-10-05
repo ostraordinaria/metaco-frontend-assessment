@@ -239,6 +239,18 @@ const ManageWinner = ({ teams, endDate, tournamentResults }) => {
 
 const ShowStandings = ({ tournamentResults, teams }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [standings, setStandings] = useState(Array(teams.length));
+
+  useEffect(() => {
+    if (tournamentResults.length) {
+      const latestStandings = [...standings];
+      for (const tournamentResult of tournamentResults) {
+        latestStandings[tournamentResult.position - 1] =
+          tournamentResult.teamId;
+      }
+      setStandings(latestStandings);
+    }
+  }, [tournamentResults]);
 
   return (
     <>
@@ -259,15 +271,11 @@ const ShowStandings = ({ tournamentResults, teams }) => {
           <ModalCloseButton />
           <ModalBody>
             <Stack direction={['row', 'column']}>
-              {teams.map((team, index) => (
-                <FormControl my={3} key={index}>
+              {standings.map((standing, index) => (
+                <FormControl key={index}>
                   <FormLabel>{`Position ${index + 1}`}</FormLabel>
                   <Text>
-                    {tournamentResults.find(
-                      ({ position }) => position === index + 1
-                    )
-                      ? team.name
-                      : '-'}
+                    {teams.find(team => team.id === standing)?.name || '-'}
                   </Text>
                 </FormControl>
               ))}
