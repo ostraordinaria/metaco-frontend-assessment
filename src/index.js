@@ -13,6 +13,7 @@ function prepare() {
   return Promise.resolve();
 }
 
+// remove prepare for real api calls
 prepare().then(() => {
   ReactDOM.render(
     <StrictMode>

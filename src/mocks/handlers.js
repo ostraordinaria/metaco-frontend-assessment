@@ -35,5 +35,23 @@ export const handlers = [
     );
   }),
 
-  rest.get('/explorer', null),
+  rest.get(`${process.env.REACT_APP_API_URL}/explorer`, (req, res, ctx) => {
+    return res(
+      ctx.delay(500),
+      ctx.status(200),
+      ctx.json({
+        data: [
+          {
+            coin: 3,
+            createdAt: new Date(),
+            email: 'test@email.com',
+            id: 10,
+            name: 'User name',
+            picture: '',
+            updatedAt: new Date(),
+          },
+        ],
+      })
+    );
+  }),
 ];
