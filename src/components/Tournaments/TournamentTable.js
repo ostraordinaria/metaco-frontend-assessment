@@ -24,6 +24,7 @@ import {
   Skeleton,
   useDisclosure,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { client } from 'utils/api-client';
 import { formatDate } from 'utils/misc';
@@ -110,6 +111,7 @@ const LeaderboardTable = () => {
                     <Stack direction={['column', 'row']}>
                       <Box>
                         <ManageWinner
+                          id={tournament.id}
                           endDate={tournament.endDate}
                           teams={tournament.teams}
                           tournamentResults={tournament.tournamentResults}
@@ -147,8 +149,11 @@ const LeaderboardTable = () => {
   );
 };
 
-const ManageWinner = ({ teams, endDate, tournamentResults }) => {
+const ManageWinner = ({ id, teams, endDate, tournamentResults }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
   const getWinnerStandings = () => {
     let winnerStandings = Array(teams.length);
@@ -170,6 +175,32 @@ const ManageWinner = ({ teams, endDate, tournamentResults }) => {
   const handleClose = () => {
     onClose();
     setWinners(getWinnerStandings());
+  };
+
+  const updateStandings = async () => {
+    setLoading(true);
+    try {
+      await client(`tournament-results/${id}`, {
+        method: 'PUT',
+        data: { winners },
+      });
+      toast({
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        title: 'Update successful',
+        description: 'Successfully updating standings',
+      });
+    } catch (error) {
+      toast({
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        title: 'Something wrong happened',
+        description: 'Please try again',
+      });
+      setError(true);
+    }
   };
 
   return (
@@ -229,7 +260,9 @@ const ManageWinner = ({ teams, endDate, tournamentResults }) => {
             <Button colorScheme="blue" mr={3} onClick={handleClose}>
               Close
             </Button>
-            <Button variant="ghost">Update</Button>
+            <Button variant="ghost" onClick={updateStandings}>
+              Update
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
