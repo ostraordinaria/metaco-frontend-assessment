@@ -1,3 +1,5 @@
+### `To do proper api calls please remove prepare in index.js`
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
